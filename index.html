@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Seestern Fighters Arena</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-container">
+    <canvas id="game-canvas"></canvas>
+
+    <!-- HUD -->
+    <div id="hud" class="hidden">
+      <div id="hud-top">
+        <div id="health-container">
+          <div id="health-label">FARBE</div>
+          <div id="health-bar-bg">
+            <div id="health-bar"></div>
+          </div>
+          <div id="health-text">100</div>
+        </div>
+        <div id="wave-info">
+          <div id="wave-label">WELLE</div>
+          <div id="wave-number">1</div>
+        </div>
+        <div id="score-container">
+          <div id="score-label">PUNKTE</div>
+          <div id="score-number">0</div>
+        </div>
+      </div>
+
+      <div id="weapon-display">
+        <div id="weapon-icon">🫧</div>
+        <div id="weapon-name">Bubble Blaster</div>
+        <div id="weapon-ammo"></div>
+        <div id="cooldown-bar-bg"><div id="cooldown-bar"></div></div>
+      </div>
+
+      <div id="crosshair">+</div>
+
+      <div id="hit-markers-container"></div>
+      <div id="damage-numbers-container"></div>
+    </div>
+
+    <!-- Touch Controls -->
+    <div id="touch-controls" class="hidden">
+      <!-- Left: Joystick -->
+      <div id="joystick-zone">
+        <div id="joystick-base">
+          <div id="joystick-knob"></div>
+        </div>
+      </div>
+
+      <!-- Right: Action Buttons -->
+      <div id="action-zone">
+        <div id="btn-jump" class="action-btn" data-action="jump">
+          <span class="btn-icon">↑</span>
+          <span class="btn-label">SPRING</span>
+        </div>
+        <div id="btn-fire" class="action-btn btn-fire" data-action="fire">
+          <span class="btn-icon">●</span>
+          <span class="btn-label">FEUER</span>
+        </div>
+        <div id="btn-slam" class="action-btn btn-slam" data-action="slam">
+          <span class="btn-icon">★</span>
+          <span class="btn-label">SLAM</span>
+          <div class="slam-cooldown-ring"></div>
+        </div>
+        <div id="btn-dash" class="action-btn btn-dash" data-action="dash">
+          <span class="btn-icon">»</span>
+          <span class="btn-label">DASH</span>
+        </div>
+        <div id="btn-weapon" class="action-btn btn-weapon" data-action="weapon">
+          <span class="btn-icon">⇄</span>
+          <span class="btn-label">WAFFE</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen Overlays -->
+    <div id="screen-menu" class="screen">
+      <div class="screen-content">
+        <div class="game-title">
+          <div class="title-star">★</div>
+          <h1>SEESTERN<br>FIGHTERS</h1>
+          <div class="title-sub">ARENA</div>
+        </div>
+        <div class="menu-info">
+          <p>Kämpfe dich durch die Tiefen!</p>
+          <p class="controls-hint">Links: Joystick · Rechts: Feuer, Sprung, Slam, Dash</p>
+        </div>
+        <button id="btn-start" class="menu-btn">KAMPF BEGINNEN</button>
+      </div>
+    </div>
+
+    <div id="screen-gameover" class="screen hidden">
+      <div class="screen-content">
+        <h2 class="gameover-title">BESIEGT!</h2>
+        <div class="final-score-label">Endpunktzahl</div>
+        <div id="final-score" class="final-score">0</div>
+        <div id="final-wave" class="final-wave">Welle 1 erreicht</div>
+        <button id="btn-restart" class="menu-btn">NOCHMAL KÄMPFEN</button>
+      </div>
+    </div>
+
+    <div id="screen-win" class="screen hidden">
+      <div class="screen-content">
+        <h2 class="win-title">SIEG!</h2>
+        <div class="win-sub">Arena bezwungen!</div>
+        <div class="final-score-label">Endpunktzahl</div>
+        <div id="win-score" class="final-score">0</div>
+        <button id="btn-win-restart" class="menu-btn">NOCHMAL</button>
+      </div>
+    </div>
+
+    <div id="screen-wave" class="screen hidden">
+      <div class="screen-content compact">
+        <div id="wave-complete-text">WELLE ABGESCHLOSSEN!</div>
+        <div id="next-wave-text">Nächste Welle in 3...</div>
+      </div>
+    </div>
+  </div>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+    }
+  }
+  </script>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
