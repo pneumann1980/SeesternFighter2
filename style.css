@@ -293,7 +293,7 @@ html, body {
   bottom: 0;
   width: 50%;
   height: 55%;
-  pointer-events: auto;
+  pointer-events: none; /* let touches fall through to canvas for camera drag */
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;

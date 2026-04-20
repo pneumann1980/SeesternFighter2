@@ -62,9 +62,7 @@ export class Game {
     this.playerController = new PlayerController(this.player, this.input, this.arena);
 
     // ── Camera ──
-    this.tpCamera = new ThirdPersonCamera(this.camera, this.player, this.input);
-    // Sync controller azimuth with camera
-    this.playerController.cameraAzimuth = this.tpCamera.azimuth;
+    this.tpCamera = new ThirdPersonCamera(this.camera, this.player);
 
     // ── Weapons ──
     this.projectileManager = new ProjectileManager(this.scene);
@@ -187,8 +185,7 @@ export class Game {
     const isActive = this.state === GameState.PLAYING || this.state === GameState.WAVE_COMPLETE;
 
     if (isActive) {
-      // Sync camera azimuth bi-directionally
-      this.tpCamera.syncAzimuth(this.playerController.cameraAzimuth);
+      // Camera is the sole authority on azimuth — player controller reads it
       this.playerController.cameraAzimuth = this.tpCamera.azimuth;
 
       this.playerController.update(dt);

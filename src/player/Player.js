@@ -190,9 +190,8 @@ export class Player {
     this.group.position.z = this.position.z;
     this.group.position.y = this.position.y + this.height;
 
-    // Facing direction
-    const targetRotY = this.facing;
-    this.group.rotation.y = THREE.MathUtils.lerp(this.group.rotation.y, targetRotY, dt * 12);
+    // Facing direction — follow camera instantly (Fortnite-style)
+    this.group.rotation.y = THREE.MathUtils.lerp(this.group.rotation.y, this.facing, dt * 22);
 
     // Shadow
     this._shadow.position.x = this.position.x;

@@ -135,7 +135,8 @@ export class InputManager {
       this.joystick.magnitude = 0;
     } else {
       const scaled = (norm - JOYSTICK_DEADZONE) / (1 - JOYSTICK_DEADZONE);
-      const angle = Math.atan2(dx, dy);
+      // Negate dy: screen Y increases downward, but joystick "up" should be +1
+      const angle = Math.atan2(dx, -dy);
       this.joystick.deltaX = Math.sin(angle) * scaled;
       this.joystick.deltaY = Math.cos(angle) * scaled;
       this.joystick.magnitude = clamp(scaled, 0, 1);

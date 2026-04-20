@@ -137,14 +137,8 @@ export class PlayerController {
     this.arena.resolveColliders(p.position, p.collisionRadius);
     this.arena.clampToBounds(p.position, p.collisionRadius);
 
-    // ── Player facing ──
-    if (hasInput && this._dashTimer <= 0) {
-      const movAngle = Math.atan2(moveX, moveZ);
-      p.facing = lerpAngle(p.facing, movAngle, dt * 10);
-
-      // Auto-rotate camera to follow movement
-      this._cameraAzimuth = lerpAngle(this._cameraAzimuth, movAngle, dt * 3.5);
-    }
+    // ── Player always faces camera direction (Fortnite-style) ──
+    p.facing = this._cameraAzimuth;
 
     // ── State ──
     if (this._dashTimer <= 0 && p.state !== PlayerState.HURT && p.state !== PlayerState.DEAD) {
