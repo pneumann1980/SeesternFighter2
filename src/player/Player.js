@@ -34,11 +34,14 @@ export class Player {
     this.invincibleTimer = 0;
     this.INVINCIBLE_DURATION = 0.4;
 
+    this._moveMagnitude = 0; // set by PlayerController each frame
+
     this.group = new THREE.Group();
     this._buildMesh();
     scene.add(this.group);
 
     this._time = 0;
+    this._TAU = Math.PI * 2;
   }
 
   _buildMesh() {
@@ -218,21 +221,79 @@ export class Player {
       }
     }
 
-    // Arm animation
-    const bobSpeed = this.state === PlayerState.MOVING ? 6 : 1.5;
-    const bobAmp = this.state === PlayerState.MOVING ? 0.08 : 0.03;
-    this._arms.forEach((arm, i) => {
-      arm.pivot.rotation.z = Math.sin(this._time * bobSpeed + i * 1.2) * bobAmp;
+    this._animateStarfish(dt);
+  }
+
+  _animateStarfish(dt) {
+    const t   = this._time;
+    const TAU = this._TAU;
+    const mag = this._moveMagnitude;
+    const moving  = mag > 0.08;
+    const airborne = !this.isGrounded;
+    const slamming = this.state === PlayerState.SLAMMING;
+
+    // ── Body float bob ──
+    const bobFreq = moving ? 7 : 1.5;
+    const bobAmp  = moving ? 0.07 * mag : 0.03;
+    this._body.position.y = Math.sin(t * bobFreq) * bobAmp;
+
+    // ── Body forward tilt when running ──
+    const tiltTarget = moving ? -0.22 * mag : 0;
+    this._body.rotation.x = THREE.MathUtils.lerp(
+      this._body.rotation.x || 0, tiltTarget, dt * 6
+    );
+
+    // ── Arm wave animation ──
+    // pivot.rotation.z rotates around the arm's own outward axis,
+    // which moves the arm tip UP (negative z) or DOWN (positive z).
+    this._arms.forEach(({ pivot }, i) => {
+      const phase = (i / 5) * TAU;
+
+      if (slamming) {
+        // Tuck all arms sharply downward for the dive
+        pivot.rotation.z = THREE.MathUtils.lerp(pivot.rotation.z,  1.5, dt * 20);
+        pivot.rotation.x = THREE.MathUtils.lerp(pivot.rotation.x,  0,   dt * 10);
+
+      } else if (airborne) {
+        // Arms flare outward (up) – heroic spread
+        const spread = this.velocity.y > 1 ? -0.7 : -0.4;
+        pivot.rotation.z = THREE.MathUtils.lerp(pivot.rotation.z, spread, dt * 9);
+        // Small secondary flutter
+        pivot.rotation.x = Math.sin(t * 4 + phase) * 0.1;
+
+      } else if (moving) {
+        // Starfish swimming: sequential up-down wave through all arms
+        const freq = 5 + mag * 4;   // faster the harder joystick is pushed
+        const amp  = 0.30 + mag * 0.30;
+        // Each arm hits its peak at a different time → ripple effect
+        pivot.rotation.z = Math.sin(t * freq + phase) * -amp;
+        // Secondary side-sway for extra life
+        pivot.rotation.x = Math.sin(t * freq + phase + Math.PI / 3) * 0.12;
+
+      } else {
+        // Idle gentle undulation – each arm drifts at its own pace
+        const idleTarget = Math.sin(t * 1.8 + phase) * 0.18;
+        pivot.rotation.z = THREE.MathUtils.lerp(pivot.rotation.z, idleTarget, dt * 3);
+        pivot.rotation.x = Math.sin(t * 1.3 + phase + 1) * 0.09;
+      }
     });
 
-    // Jump stretch
-    if (!this.isGrounded) {
+    // ── Squash & stretch (jump / land) ──
+    if (airborne) {
       const vy = this.velocity.y;
-      this.group.scale.y = 1 + vy * 0.04;
-      this.group.scale.x = 1 - vy * 0.02;
-      this.group.scale.z = 1 - vy * 0.02;
+      this.group.scale.y = THREE.MathUtils.lerp(this.group.scale.y, 1 + vy * 0.05, dt * 16);
+      this.group.scale.x = THREE.MathUtils.lerp(this.group.scale.x, 1 - vy * 0.02, dt * 16);
+      this.group.scale.z = THREE.MathUtils.lerp(this.group.scale.z, 1 - vy * 0.02, dt * 16);
     } else {
-      this.group.scale.lerp(new THREE.Vector3(1, 1, 1), dt * 10);
+      this.group.scale.x = THREE.MathUtils.lerp(this.group.scale.x, 1, dt * 10);
+      this.group.scale.y = THREE.MathUtils.lerp(this.group.scale.y, 1, dt * 10);
+      this.group.scale.z = THREE.MathUtils.lerp(this.group.scale.z, 1, dt * 10);
+    }
+
+    // ── Hurt shake ──
+    if (this.state === PlayerState.HURT && this.hurtTimer > 0) {
+      this.group.position.x += (Math.random() - 0.5) * 0.07;
+      this.group.position.z += (Math.random() - 0.5) * 0.07;
     }
   }
 }

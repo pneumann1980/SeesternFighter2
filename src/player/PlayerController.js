@@ -39,6 +39,9 @@ export class PlayerController {
     const joystick = this.input.joystick;
     const hasInput = joystick.magnitude > 0.05;
 
+    // Feed movement magnitude to player for animation
+    p._moveMagnitude = joystick.magnitude;
+
     // ── Movement direction (relative to camera) ──
     const az = this._cameraAzimuth;
     const camFwdX = Math.sin(az);

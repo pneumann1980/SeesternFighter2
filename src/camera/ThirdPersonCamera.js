@@ -2,19 +2,18 @@ import * as THREE from 'three';
 import { clamp } from '../core/Utils.js';
 
 // Fortnite-style over-the-shoulder TPS camera
-const CAM_DIST      = 6.5;   // distance behind player
-const CAM_HEIGHT    = 0;      // additional flat height (elevation handles this)
-const CAM_RIGHT     = 0.9;    // right-shoulder offset in world units
-const CAM_LOOK_AHEAD = 2.2;   // how far ahead of player the look target is
-const CAM_LOOK_UP   = 1.1;    // height of look target above player base
-const CAM_SMOOTH    = 10;     // position follow speed
+const CAM_DIST      = 5.5;   // distance behind player (closer = more action)
+const CAM_RIGHT     = 1.2;   // right-shoulder offset → player sits left-of-center
+const CAM_LOOK_AHEAD = 3.5;  // look target ahead of player → open view forward
+const CAM_LOOK_UP   = 1.1;   // height of look target
+const CAM_SMOOTH    = 10;
 
-const EL_DEFAULT    = 0.22;   // default elevation (radians, ~12.5°)
+const EL_DEFAULT    = 0.28;  // default elevation (~16°)
 const EL_MIN        = -0.05;
 const EL_MAX        = 0.65;
 
-const SENS_H = 0.005;         // horizontal sensitivity (radians/px)
-const SENS_V = 0.004;         // vertical sensitivity
+const SENS_H = 0.005;        // radians per pixel horizontal
+const SENS_V = 0.004;        // radians per pixel vertical
 
 export class ThirdPersonCamera {
   constructor(camera, player) {
@@ -56,7 +55,7 @@ export class ThirdPersonCamera {
       if (e.pointerId !== this._camTouchId) return;
       const dx = e.clientX - this._camLastX;
       const dy = e.clientY - this._camLastY;
-      this._azimuth   -= dx * SENS_H;
+      this._azimuth   += dx * SENS_H;  // + = drag right → look right
       this._elevation  = clamp(this._elevation - dy * SENS_V, EL_MIN, EL_MAX);
       this._camLastX   = e.clientX;
       this._camLastY   = e.clientY;

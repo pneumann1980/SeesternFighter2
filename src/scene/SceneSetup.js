@@ -3,7 +3,7 @@ import * as THREE from 'three';
 export class SceneSetup {
   constructor() {
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 300);
+    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 300);
 
     this._setupScene();
     this._setupLights();
