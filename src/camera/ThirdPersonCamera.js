@@ -35,12 +35,9 @@ export class ThirdPersonCamera {
   get azimuth() { return this._azimuth; }
   set azimuth(v) { this._azimuth = v; }
 
-  // Called each frame with right-joystick delta (normalized -1..1)
-  rotateDelta(dx, dy, dt) {
-    const ROT_H = 2.8;
-    const ROT_V = 1.6;
-    this._azimuth   += dx * ROT_H * dt;
-    this._elevation  = clamp(this._elevation - dy * ROT_V * dt, EL_MIN, EL_MAX);
+  // Rotate camera yaw from right-joystick horizontal delta (normalized -1..1)
+  rotateDelta(dx, dt) {
+    this._azimuth -= dx * 2.8 * dt; // negate: push stick right → look right
   }
 
   shake(intensity = 0.3) {

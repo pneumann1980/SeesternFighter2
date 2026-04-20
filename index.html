@@ -44,8 +44,7 @@
     </div>
 
     <!-- ═══ TOUCH CONTROLS ═══
-         Layout (landscape):
-         [LEFT JOY] ── [FIRE/JUMP/SLAM/DASH/WPN] ── [RIGHT JOY (camera)]
+         [LEFT JOY: move] [FIRE+DASH+WPN] [RIGHT JOY: yaw / ↑jump / ↓slam]
     -->
     <div id="touch-controls" class="hidden">
 
@@ -56,27 +55,13 @@
         </div>
       </div>
 
-      <!-- Center: Action buttons -->
+      <!-- Center: Fire + secondary -->
       <div id="action-zone">
-        <div class="action-col secondary-col">
-          <div id="btn-jump" class="action-btn" data-action="jump">
-            <span class="btn-icon">↑</span>
-            <span class="btn-label">SPRING</span>
-          </div>
-          <div id="btn-slam" class="action-btn btn-slam" data-action="slam">
-            <span class="btn-icon">★</span>
-            <span class="btn-label">SLAM</span>
-          </div>
+        <div id="btn-fire" class="action-btn btn-fire" data-action="fire">
+          <span class="btn-icon">●</span>
+          <span class="btn-label">FEUER</span>
         </div>
-
-        <div class="action-col fire-col">
-          <div id="btn-fire" class="action-btn btn-fire" data-action="fire">
-            <span class="btn-icon">●</span>
-            <span class="btn-label">FEUER</span>
-          </div>
-        </div>
-
-        <div class="action-col secondary-col">
+        <div class="secondary-btns">
           <div id="btn-dash" class="action-btn btn-dash" data-action="dash">
             <span class="btn-icon">»</span>
             <span class="btn-label">DASH</span>
@@ -88,12 +73,13 @@
         </div>
       </div>
 
-      <!-- Right: Camera joystick (yaw + pitch) -->
+      <!-- Right: Yaw + gesture joystick -->
       <div id="right-joy-zone">
+        <div class="joy-hint">↑ SPRING</div>
         <div id="right-joy-base">
           <div id="right-joy-knob"></div>
         </div>
-        <div id="cam-label">CAM</div>
+        <div class="joy-hint">↓ SLAM</div>
       </div>
 
     </div>

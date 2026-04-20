@@ -185,8 +185,8 @@ export class Game {
     const isActive = this.state === GameState.PLAYING || this.state === GameState.WAVE_COMPLETE;
 
     if (isActive) {
-      // Right joystick rotates camera; camera azimuth is authority for player facing
-      this.tpCamera.rotateDelta(this.input.rightJoystick.deltaX, this.input.rightJoystick.deltaY, dt);
+      // Right joystick X → camera yaw; Y-axis gestures handled in InputManager
+      this.tpCamera.rotateDelta(this.input.rightJoystick.deltaX, dt);
       this.playerController.cameraAzimuth = this.tpCamera.azimuth;
 
       this.playerController.update(dt);

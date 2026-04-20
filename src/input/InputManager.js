@@ -14,11 +14,14 @@ export class InputManager {
     this.joystick = makeJoystickState();
     this.rightJoystick = makeJoystickState();
 
-    // Buttons
+    // Buttons (jump/slam come from right-stick gestures, not touch buttons)
     this.buttons = { fire: false, jump: false, slam: false, dash: false, weapon: false };
     this._buttonPrev    = { fire: false, jump: false, slam: false, dash: false, weapon: false };
     this._buttonPressed = { fire: false, jump: false, slam: false, dash: false, weapon: false };
     this._buttonTouches = {};
+
+    // Right-stick gesture state (starts armed so first flick works immediately)
+    this._rightGestureArmed = true;
 
     this._keys = new Set();
 
@@ -202,6 +205,27 @@ export class InputManager {
     for (const k in this._buttonPressed) this._buttonPressed[k] = false;
     if (!this.joystick.active) { this.joystick.deltaX = 0; this.joystick.deltaY = 0; this.joystick.magnitude = 0; }
     if (!this.rightJoystick.active) { this.rightJoystick.deltaX = 0; this.rightJoystick.deltaY = 0; this.rightJoystick.magnitude = 0; }
+    this._detectRightGestures();
     this._syncKeyboard();
+  }
+
+  _detectRightGestures() {
+    const ry  = this.rightJoystick.deltaY;
+    const mag = this.rightJoystick.magnitude;
+
+    // Re-arm once stick returns near center
+    if (mag < 0.25) {
+      this._rightGestureArmed = true;
+    }
+
+    if (this._rightGestureArmed && mag > 0.25) {
+      if (ry > 0.6) {         // flick up → jump
+        this._buttonPressed.jump = true;
+        this._rightGestureArmed = false;
+      } else if (ry < -0.6) { // flick down → slam
+        this._buttonPressed.slam = true;
+        this._rightGestureArmed = false;
+      }
+    }
   }
 }
