@@ -23,55 +23,25 @@ export class ThirdPersonCamera {
     this._azimuth   = 0;
     this._elevation = EL_DEFAULT;
 
-    this._currentPos  = new THREE.Vector3(0, 3, -CAM_DIST);
-    this._targetPos   = new THREE.Vector3();
-    this._lookTarget  = new THREE.Vector3();
+    this._currentPos = new THREE.Vector3(0, 3, -CAM_DIST);
+    this._targetPos  = new THREE.Vector3();
+    this._lookTarget = new THREE.Vector3();
 
     this._shakeIntensity = 0;
     this._shakeDecay     = 8;
     this._shakeOffset    = new THREE.Vector3();
-
-    this._camTouchId = null;
-    this._camLastX   = 0;
-    this._camLastY   = 0;
-
-    this._setupCameraTouch();
-  }
-
-  _setupCameraTouch() {
-    const canvas = document.getElementById('game-canvas');
-
-    canvas.addEventListener('pointerdown', e => {
-      // Only right half, and only if no camera touch is active yet
-      if (e.clientX > window.innerWidth * 0.48 && this._camTouchId === null) {
-        this._camTouchId = e.pointerId;
-        this._camLastX   = e.clientX;
-        this._camLastY   = e.clientY;
-        try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
-      }
-    });
-
-    canvas.addEventListener('pointermove', e => {
-      if (e.pointerId !== this._camTouchId) return;
-      const dx = e.clientX - this._camLastX;
-      const dy = e.clientY - this._camLastY;
-      this._azimuth   += dx * SENS_H;  // + = drag right → look right
-      this._elevation  = clamp(this._elevation - dy * SENS_V, EL_MIN, EL_MAX);
-      this._camLastX   = e.clientX;
-      this._camLastY   = e.clientY;
-    });
-
-    const release = e => {
-      if (e.pointerId === this._camTouchId) this._camTouchId = null;
-    };
-    canvas.addEventListener('pointerup',     release);
-    canvas.addEventListener('pointercancel', release);
   }
 
   get azimuth() { return this._azimuth; }
   set azimuth(v) { this._azimuth = v; }
 
-  isBeingDragged() { return this._camTouchId !== null; }
+  // Called each frame with right-joystick delta (normalized -1..1)
+  rotateDelta(dx, dy, dt) {
+    const ROT_H = 2.8;
+    const ROT_V = 1.6;
+    this._azimuth   += dx * ROT_H * dt;
+    this._elevation  = clamp(this._elevation - dy * ROT_V * dt, EL_MIN, EL_MAX);
+  }
 
   shake(intensity = 0.3) {
     this._shakeIntensity = Math.max(this._shakeIntensity, intensity);

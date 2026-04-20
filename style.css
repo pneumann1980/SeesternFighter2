@@ -243,26 +243,77 @@ html, body {
 /* ─── Touch Controls ─── */
 #touch-controls {
   position: absolute;
-  inset: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 54%;
   z-index: 20;
   pointer-events: none;
+  display: flex;
+  align-items: flex-end;
 }
 
-#joystick-zone {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 50%;
-  height: 55%;
+/* Left: movement joystick */
+#left-joy-zone {
+  flex: 0 0 38%;
+  height: 100%;
   pointer-events: auto;
   display: flex;
   align-items: flex-end;
-  justify-content: flex-start;
+  justify-content: center;
   padding-bottom: max(env(safe-area-inset-bottom, 12px), 20px);
-  padding-left: 20px;
+  padding-left: 16px;
 }
 
-#joystick-base {
+/* Center: action buttons */
+#action-zone {
+  flex: 1;
+  height: 100%;
+  pointer-events: none;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: max(env(safe-area-inset-bottom, 12px), 16px);
+  gap: 8px;
+}
+
+.action-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.fire-col {
+  justify-content: center;
+  padding-bottom: 8px;
+}
+
+/* Right: camera joystick */
+#right-joy-zone {
+  flex: 0 0 38%;
+  height: 100%;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: max(env(safe-area-inset-bottom, 12px), 20px);
+  padding-right: 16px;
+}
+
+#cam-label {
+  color: rgba(0,229,255,0.5);
+  font-size: 9px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  margin-top: 4px;
+  pointer-events: none;
+}
+
+#left-joy-base,
+#right-joy-base {
   width: 110px;
   height: 110px;
   border-radius: 50%;
@@ -276,7 +327,8 @@ html, body {
   transition: opacity 0.2s;
 }
 
-#joystick-knob {
+#left-joy-knob,
+#right-joy-knob {
   width: 46px;
   height: 46px;
   border-radius: 50%;
@@ -285,24 +337,6 @@ html, body {
   position: absolute;
   pointer-events: none;
   transition: box-shadow 0.1s;
-}
-
-#action-zone {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 50%;
-  height: 55%;
-  pointer-events: none; /* let touches fall through to canvas for camera drag */
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
-  padding-bottom: max(env(safe-area-inset-bottom, 12px), 20px);
-  padding-right: 16px;
-  gap: 10px;
-  flex-wrap: wrap;
-  max-width: 320px;
-  right: 0;
 }
 
 .action-btn {

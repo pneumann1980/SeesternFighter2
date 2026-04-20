@@ -18,9 +18,7 @@
       <div id="hud-top">
         <div id="health-container">
           <div id="health-label">FARBE</div>
-          <div id="health-bar-bg">
-            <div id="health-bar"></div>
-          </div>
+          <div id="health-bar-bg"><div id="health-bar"></div></div>
           <div id="health-text">100</div>
         </div>
         <div id="wave-info">
@@ -41,44 +39,63 @@
       </div>
 
       <div id="crosshair">+</div>
-
       <div id="hit-markers-container"></div>
       <div id="damage-numbers-container"></div>
     </div>
 
-    <!-- Touch Controls -->
+    <!-- ═══ TOUCH CONTROLS ═══
+         Layout (landscape):
+         [LEFT JOY] ── [FIRE/JUMP/SLAM/DASH/WPN] ── [RIGHT JOY (camera)]
+    -->
     <div id="touch-controls" class="hidden">
-      <!-- Left: Joystick -->
-      <div id="joystick-zone">
-        <div id="joystick-base">
-          <div id="joystick-knob"></div>
+
+      <!-- Left: Movement joystick -->
+      <div id="left-joy-zone">
+        <div id="left-joy-base">
+          <div id="left-joy-knob"></div>
         </div>
       </div>
 
-      <!-- Right: Action Buttons -->
+      <!-- Center: Action buttons -->
       <div id="action-zone">
-        <div id="btn-jump" class="action-btn" data-action="jump">
-          <span class="btn-icon">↑</span>
-          <span class="btn-label">SPRING</span>
+        <div class="action-col secondary-col">
+          <div id="btn-jump" class="action-btn" data-action="jump">
+            <span class="btn-icon">↑</span>
+            <span class="btn-label">SPRING</span>
+          </div>
+          <div id="btn-slam" class="action-btn btn-slam" data-action="slam">
+            <span class="btn-icon">★</span>
+            <span class="btn-label">SLAM</span>
+          </div>
         </div>
-        <div id="btn-fire" class="action-btn btn-fire" data-action="fire">
-          <span class="btn-icon">●</span>
-          <span class="btn-label">FEUER</span>
+
+        <div class="action-col fire-col">
+          <div id="btn-fire" class="action-btn btn-fire" data-action="fire">
+            <span class="btn-icon">●</span>
+            <span class="btn-label">FEUER</span>
+          </div>
         </div>
-        <div id="btn-slam" class="action-btn btn-slam" data-action="slam">
-          <span class="btn-icon">★</span>
-          <span class="btn-label">SLAM</span>
-          <div class="slam-cooldown-ring"></div>
-        </div>
-        <div id="btn-dash" class="action-btn btn-dash" data-action="dash">
-          <span class="btn-icon">»</span>
-          <span class="btn-label">DASH</span>
-        </div>
-        <div id="btn-weapon" class="action-btn btn-weapon" data-action="weapon">
-          <span class="btn-icon">⇄</span>
-          <span class="btn-label">WAFFE</span>
+
+        <div class="action-col secondary-col">
+          <div id="btn-dash" class="action-btn btn-dash" data-action="dash">
+            <span class="btn-icon">»</span>
+            <span class="btn-label">DASH</span>
+          </div>
+          <div id="btn-weapon" class="action-btn btn-weapon" data-action="weapon">
+            <span class="btn-icon">⇄</span>
+            <span class="btn-label">WAFFE</span>
+          </div>
         </div>
       </div>
+
+      <!-- Right: Camera joystick (yaw + pitch) -->
+      <div id="right-joy-zone">
+        <div id="right-joy-base">
+          <div id="right-joy-knob"></div>
+        </div>
+        <div id="cam-label">CAM</div>
+      </div>
+
     </div>
 
     <!-- Screen Overlays -->
@@ -90,8 +107,8 @@
           <div class="title-sub">ARENA</div>
         </div>
         <div class="menu-info">
-          <p>Kämpfe dich durch die Tiefen!</p>
-          <p class="controls-hint">Links: Joystick · Rechts: Feuer, Sprung, Slam, Dash</p>
+          <p>Kämpfe dich durch die Tiefen des Ozeans!</p>
+          <p class="controls-hint">Links: Bewegen &nbsp;|&nbsp; Rechts: Kamera &nbsp;|&nbsp; Buttons: Feuer / Aktionen</p>
         </div>
         <button id="btn-start" class="menu-btn">KAMPF BEGINNEN</button>
       </div>

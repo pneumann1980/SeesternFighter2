@@ -16,23 +16,25 @@ export class UIManager {
   }
 
   _setupButtons() {
-    document.getElementById('btn-start').addEventListener('click', () => {
-      this.events.emit('startGame', {});
-    });
+    // Use pointerup so it fires reliably on touch without 300ms delay conflicts
+    const once = (id, event) => {
+      document.getElementById(id).addEventListener('pointerup', e => {
+        e.preventDefault();
+        this.events.emit(event, {});
+      });
+    };
+    once('btn-start',       'startGame');
+    once('btn-restart',     'restart');
+    once('btn-win-restart', 'restart');
 
-    document.getElementById('btn-restart').addEventListener('click', () => {
-      this.events.emit('restart', {});
+    // Keyboard Enter on menu
+    window.addEventListener('keydown', e => {
+      if (e.code === 'Enter' || e.code === 'NumpadEnter') {
+        if (!this._screens.menu.classList.contains('hidden')) {
+          this.events.emit('startGame', {});
+        }
+      }
     });
-
-    document.getElementById('btn-win-restart').addEventListener('click', () => {
-      this.events.emit('restart', {});
-    });
-
-    // Touch also for start
-    document.getElementById('btn-start').addEventListener('touchstart', (e) => {
-      e.preventDefault();
-      this.events.emit('startGame', {});
-    }, { passive: false });
   }
 
   _setupWaveEvents() {

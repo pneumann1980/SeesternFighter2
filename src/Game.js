@@ -185,7 +185,8 @@ export class Game {
     const isActive = this.state === GameState.PLAYING || this.state === GameState.WAVE_COMPLETE;
 
     if (isActive) {
-      // Camera is the sole authority on azimuth — player controller reads it
+      // Right joystick rotates camera; camera azimuth is authority for player facing
+      this.tpCamera.rotateDelta(this.input.rightJoystick.deltaX, this.input.rightJoystick.deltaY, dt);
       this.playerController.cameraAzimuth = this.tpCamera.azimuth;
 
       this.playerController.update(dt);
