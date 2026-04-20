@@ -44,8 +44,10 @@ export class InputManager {
     // Left joystick
     this._bindJoystick(this._leftZone, this._leftBase, this._leftKnob, this.joystick);
 
-    // Right joystick (camera)
-    this._bindJoystick(this._rightZone, this._rightBase, this._rightKnob, this.rightJoystick);
+    // Right joystick (camera yaw + tap=fire + gestures)
+    this._bindJoystick(this._rightZone, this._rightBase, this._rightKnob, this.rightJoystick, () => {
+      this._buttonPressed.fire = true; // tap on right zone = fire
+    });
 
     // Action buttons
     this._actionBtns.forEach(btn => {
@@ -71,7 +73,9 @@ export class InputManager {
     });
   }
 
-  _bindJoystick(zone, base, knob, state) {
+  _bindJoystick(zone, base, knob, state, onTap = null) {
+    let tapT0 = 0, tapMaxDist = 0;
+
     zone.addEventListener('pointerdown', e => {
       e.preventDefault();
       if (state.active) return;
@@ -80,6 +84,8 @@ export class InputManager {
       const rect = zone.getBoundingClientRect();
       state.startX = e.clientX - rect.left;
       state.startY = e.clientY - rect.top;
+      tapT0 = Date.now();
+      tapMaxDist = 0;
       this._updateJoystickVisual(knob, base, 0, 0, true);
       try { zone.setPointerCapture(e.pointerId); } catch (_) {}
     });
@@ -91,6 +97,7 @@ export class InputManager {
       let dx = (e.clientX - rect.left) - state.startX;
       let dy = (e.clientY - rect.top)  - state.startY;
       const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist > tapMaxDist) tapMaxDist = dist;
 
       if (dist > JOYSTICK_MAX_RADIUS) {
         dx = (dx / dist) * JOYSTICK_MAX_RADIUS;
@@ -102,7 +109,7 @@ export class InputManager {
         state.deltaX = 0; state.deltaY = 0; state.magnitude = 0;
       } else {
         const scaled = (norm - JOYSTICK_DEADZONE) / (1 - JOYSTICK_DEADZONE);
-        const angle = Math.atan2(dx, -dy); // negate dy: screen Y down → joystick up = +1
+        const angle = Math.atan2(dx, -dy);
         state.deltaX    = Math.sin(angle) * scaled;
         state.deltaY    = Math.cos(angle) * scaled;
         state.magnitude = clamp(scaled, 0, 1);
@@ -113,6 +120,8 @@ export class InputManager {
 
     const release = e => {
       if (e.pointerId !== state.touchId) return;
+      // Tap = quick touch without much movement → fire
+      if (onTap && Date.now() - tapT0 < 220 && tapMaxDist < 14) onTap();
       state.active = false; state.touchId = null;
       state.deltaX = 0; state.deltaY = 0; state.magnitude = 0;
       this._updateJoystickVisual(knob, base, 0, 0, false);
@@ -169,10 +178,12 @@ export class InputManager {
     if (kDash && !this._buttonPrev.dash)   this._buttonPressed.dash   = true;
     if (kWep  && !this._buttonPrev.weapon) this._buttonPressed.weapon = true;
 
-    // Keyboard camera rotation via arrow keys (when no right joystick active)
+    // Keyboard camera rotation via arrow keys
     if (!this.rightJoystick.active) {
       if (this._keys.has('ArrowLeft'))  { this.rightJoystick.deltaX = -1; this.rightJoystick.magnitude = 1; }
       if (this._keys.has('ArrowRight')) { this.rightJoystick.deltaX =  1; this.rightJoystick.magnitude = 1; }
+      if (this._keys.has('ArrowUp'))    { this.rightJoystick.deltaY =  1; this.rightJoystick.magnitude = 1; }
+      if (this._keys.has('ArrowDown'))  { this.rightJoystick.deltaY = -1; this.rightJoystick.magnitude = 1; }
     }
 
     // Keyboard movement

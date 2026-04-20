@@ -255,7 +255,7 @@ html, body {
 
 /* Left: movement joystick */
 #left-joy-zone {
-  flex: 0 0 38%;
+  flex: 1;
   height: 100%;
   pointer-events: auto;
   display: flex;
@@ -265,28 +265,9 @@ html, body {
   padding-left: 16px;
 }
 
-/* Center: fire + secondary buttons */
-#action-zone {
-  flex: 0 0 22%;
-  height: 100%;
-  pointer-events: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  padding-bottom: max(env(safe-area-inset-bottom, 12px), 14px);
-  gap: 10px;
-}
-
-.secondary-btns {
-  display: flex;
-  gap: 8px;
-  pointer-events: none;
-}
-
-/* Right: yaw + gesture joystick */
+/* Right: yaw + tap=fire + gesture joystick */
 #right-joy-zone {
-  flex: 0 0 39%;
+  flex: 1;
   height: 100%;
   pointer-events: auto;
   display: flex;
@@ -294,16 +275,27 @@ html, body {
   align-items: center;
   justify-content: flex-end;
   padding-bottom: max(env(safe-area-inset-bottom, 12px), 14px);
-  padding-right: 16px;
+  padding-right: 20px;
   gap: 4px;
 }
 
 .joy-hint {
-  color: rgba(0,229,255,0.45);
+  color: rgba(0,229,255,0.4);
   font-size: 9px;
   letter-spacing: 1px;
   font-weight: 700;
   pointer-events: none;
+}
+
+/* Weapon switch — fixed top-right corner, inside HUD */
+#btn-weapon {
+  position: absolute;
+  top: max(env(safe-area-inset-top, 0px), 0px);
+  right: 0;
+  margin: 56px 12px 0 0;
+  width: 52px;
+  height: 52px;
+  pointer-events: auto;
 }
 
 #left-joy-base,

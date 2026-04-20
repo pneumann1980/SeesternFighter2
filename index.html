@@ -38,13 +38,19 @@
         <div id="cooldown-bar-bg"><div id="cooldown-bar"></div></div>
       </div>
 
+      <!-- Weapon switch — top-right, small, out of the way -->
+      <div id="btn-weapon" class="action-btn btn-weapon" data-action="weapon">
+        <span class="btn-icon">⇄</span>
+        <span class="btn-label">WAFFE</span>
+      </div>
+
       <div id="crosshair">+</div>
       <div id="hit-markers-container"></div>
       <div id="damage-numbers-container"></div>
     </div>
 
     <!-- ═══ TOUCH CONTROLS ═══
-         [LEFT JOY: move] [FIRE+DASH+WPN] [RIGHT JOY: yaw / ↑jump / ↓slam]
+         [LEFT JOY: move]          [RIGHT JOY: yaw / tap=fire / ↑jump / ↓slam]
     -->
     <div id="touch-controls" class="hidden">
 
@@ -55,31 +61,13 @@
         </div>
       </div>
 
-      <!-- Center: Fire + secondary -->
-      <div id="action-zone">
-        <div id="btn-fire" class="action-btn btn-fire" data-action="fire">
-          <span class="btn-icon">●</span>
-          <span class="btn-label">FEUER</span>
-        </div>
-        <div class="secondary-btns">
-          <div id="btn-dash" class="action-btn btn-dash" data-action="dash">
-            <span class="btn-icon">»</span>
-            <span class="btn-label">DASH</span>
-          </div>
-          <div id="btn-weapon" class="action-btn btn-weapon" data-action="weapon">
-            <span class="btn-icon">⇄</span>
-            <span class="btn-label">WAFFE</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Right: Yaw + gesture joystick -->
+      <!-- Right: Multi-function joystick -->
       <div id="right-joy-zone">
         <div class="joy-hint">↑ SPRING</div>
         <div id="right-joy-base">
           <div id="right-joy-knob"></div>
         </div>
-        <div class="joy-hint">↓ SLAM</div>
+        <div class="joy-hint">TAP=FEUER &nbsp; ↓ SLAM</div>
       </div>
 
     </div>
